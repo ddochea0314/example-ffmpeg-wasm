@@ -2,6 +2,7 @@
   "name": "example-ffmpeg-wasm",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "dependencies": {
     "@ffmpeg/ffmpeg": "^0.9.8",
     "@testing-library/jest-dom": "^5.12.0",
