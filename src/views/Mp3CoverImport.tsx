@@ -6,39 +6,66 @@ function Mp3CoverImport(): JSX.Element {
   const fileMp3Html = useRef<HTMLInputElement>(null);
 
   const [message, setMessage] = useState("Click Start to import");
+  const [downloadLink, setDownloadLink] = useState("");
   const ffmpeg = createFFmpeg({
     log: true,
   });
 
-  const getfileArrayBuffer = async (file : React.RefObject<HTMLInputElement>) => {
-    if(file.current && file.current.files && file.current.files.length !== 0) {
-        return await file.current.files[0].arrayBuffer();
+  const getFileExtension = (file: File) => file.name.split(".")[1];
+
+  const getFile = (file: React.RefObject<HTMLInputElement>) => {
+    if (file.current && file.current.files && file.current.files.length !== 0) {
+      return file.current.files[0];
+    } else {
+      return null;
     }
-    else {
-        return null;
-    }
-  }
+  };
 
   const doImport = async () => {
     setMessage("Loading ffmpeg-core.js");
     await ffmpeg.load();
-    const png = await getfileArrayBuffer(fileCoverHtml);
-    const mp3 = await getfileArrayBuffer(fileMp3Html);
-    if(png && mp3){
-        ffmpeg.FS("writeFile", "test.png", new Uint8Array(png));
-        ffmpeg.FS("writeFile", "test.mp3", new Uint8Array(mp3));
-        setMessage("Start Import");
-        await ffmpeg.run("-i", "test.mp3", "-i", "test.png", "-c:a", "copy", "-c:v" ,"copy" ,"-map" ,"0:0", "-map", "1:0", "-id3v2_version", "3", "output.mp3");
-        setMessage("Complete Import");
-        const data = ffmpeg.FS("readFile", "output.mp3");
-        console.log(data);
+    const cover = getFile(fileCoverHtml);
+    const mp3 = getFile(fileMp3Html);
+    if (cover && mp3) {
+      const coverName = `test.${getFileExtension(cover)}`;
+      ffmpeg.FS(
+        "writeFile",
+        coverName,
+        new Uint8Array(await cover.arrayBuffer())
+      );
+      ffmpeg.FS(
+        "writeFile",
+        "test.mp3",
+        new Uint8Array(await mp3.arrayBuffer())
+      );
+      setMessage("Start Import");
+      const args = [
+        "-i",
+        "test.mp3",
+        "-i",
+        coverName,
+        "-c:a",
+        "copy",
+        "-c:v",
+        "copy",
+        "-map",
+        "0:0",
+        "-map",
+        "1:0",
+        "-id3v2_version",
+        "3",
+        "output.mp3",
+      ]; // must split
+      await ffmpeg.run(...args);
+      setMessage("Complete Import");
+      const data = ffmpeg.FS("readFile", "output.mp3");
+      URL.revokeObjectURL(downloadLink);
+      setDownloadLink(
+        URL.createObjectURL(new Blob([data.buffer], { type: "audio/mp3" }))
+      );
+    } else {
+      setMessage("Can not Import. need file check. 😪");
     }
-    else {
-        setMessage("Can not Import. need file check. 😪");
-    }
-    // setVideoSrc(
-    //   URL.createObjectURL(new Blob([data.buffer], { type: "video/mp4" }))
-    // );
   };
 
   return (
@@ -50,13 +77,18 @@ function Mp3CoverImport(): JSX.Element {
         ref={fileCoverHtml}
         id="img"
         type="file"
-        accept=".png"
+        accept=".png,.jpg,.jpeg"
       />
       <label htmlFor="mp3">mp3 </label>
       <input ref={fileMp3Html} id="mp3" type="file" accept=".mp3" />
       <p />
       <button onClick={doImport}>Start</button>
       <p>{message}</p>
+      {downloadLink.length !== 0 && (
+        <a href={downloadLink} download="result.mp3">
+          download
+        </a>
+      )}
     </div>
   );
 }
