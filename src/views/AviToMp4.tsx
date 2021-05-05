@@ -25,7 +25,8 @@ function AviToMp4(): JSX.Element {
   };
 
   return (
-    <div className="App">
+    <div>
+      <h1>Example 1. Convert avi file to mp4</h1>
       <p />
       <video src={videoSrc} controls></video>
       <br />
