@@ -1,7 +1,7 @@
-import AviToMp4 from "./AviToMp4";
-import Mp3CoverImport from "./Mp3CoverImport";
+import Example1 from "./Example1";
+import Example2 from "./Example2";
 
 export {
-    AviToMp4,
-    Mp3CoverImport
+    Example1,
+    Example2
 }
