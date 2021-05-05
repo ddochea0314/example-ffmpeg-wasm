@@ -1,3 +1,6 @@
+// original source. https://github.com/ffmpegwasm/react-app
+// change typescript(.tsx)
+
 import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
 import { useState } from "react";
 
