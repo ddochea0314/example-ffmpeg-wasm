@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
+  "author": "ddochea0314 <ddochea0314@gmail.com>",
   "dependencies": {
     "@ffmpeg/ffmpeg": "^0.9.8",
     "@testing-library/jest-dom": "^5.12.0",
