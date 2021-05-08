@@ -1,15 +1,14 @@
-import { createFFmpeg } from "@ffmpeg/ffmpeg";
-import React, { useState, useRef } from "react";
+import FFmpegContext from "../context/FFmpegContext";
+import { FFmpeg } from "@ffmpeg/ffmpeg";
+import React, { useState, useRef, useContext } from "react";
 
 function Mp3CoverImport(): JSX.Element {
   const fileCoverHtml = useRef<HTMLInputElement>(null);
   const fileMp3Html = useRef<HTMLInputElement>(null);
-
+  const ffmpeg = useContext<FFmpeg>(FFmpegContext);
+ 
   const [message, setMessage] = useState("Click Start to import");
   const [downloadLink, setDownloadLink] = useState("");
-  const ffmpeg = createFFmpeg({
-    log: true,
-  });
 
   const getFileExtension = (file: File) => file.name.split(".")[1];
 
@@ -23,7 +22,9 @@ function Mp3CoverImport(): JSX.Element {
 
   const doImport = async () => {
     setMessage("Loading ffmpeg-core.js");
-    await ffmpeg.load();
+    if(!ffmpeg.isLoaded()){
+      await ffmpeg.load();
+    }
     const cover = getFile(fileCoverHtml);
     const mp3 = getFile(fileMp3Html);
     if (cover && mp3) {
