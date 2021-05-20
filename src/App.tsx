@@ -1,7 +1,7 @@
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import "./App.css";
 
-import { Example1, Example2, Example3 } from "./views/Index";
+import { Example1, Example2, Example3, Example4 } from "./views/Index";
 
 function App() {
   return (
@@ -16,9 +16,15 @@ function App() {
         <li>
           <Link to="/Example3">Example 3 (Mp3CoverExport)</Link>
         </li>
+        <li>
+          <Link to="/Example4">Example 4 (LoadAndExit)</Link>
+        </li>
       </ul>
       <br />
       <Switch>
+        <Route path="/Example4">
+          <Example4 />
+        </Route>
         <Route path="/Example3">
           <Example3 />
         </Route>
