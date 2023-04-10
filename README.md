@@ -12,3 +12,7 @@ https://ddochea.tistory.com/147 에 관련 패키지 소개 및 설명글을 작
 "Cross-Origin-Opener-Policy": "same-origin"
 "Cross-Origin-Embedder-Policy": "require-corp"
 ```
+
+## 유의사항
+- @ffmpeg/core 및 wasm 파일에 대한 라이선스는 MIT가 아닙니다. 
+- 해당 예제는 오로지 예제로서의 역할이기 때문에 MIT 라이선스로 올렸을 뿐 ffmpeg 의 라이선스를 대응하지 않습니다.
