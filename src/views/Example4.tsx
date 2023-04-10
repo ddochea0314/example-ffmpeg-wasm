@@ -42,10 +42,10 @@ function LoadAndExit(): JSX.Element {
     }
     try {
       ffmpeg.exit();
-    } catch(e) {
-      setMessage(e.message); // exit always catched exception
+    } catch(e : any) {
+      setMessage(e?.message); // exit always catched exception
     } finally {
-      ffmpeg = createFFmpeg({log: true});
+      ffmpeg = createFFmpeg({log: true, corePath: '/ffmpeg-core.js'}); // corepath 없을 경우 cdn에서 가져옴
     }
   };
 
